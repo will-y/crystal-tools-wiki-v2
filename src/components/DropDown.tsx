@@ -19,7 +19,7 @@ function DropDown(props: DropDownProps) {
   return (
     <>
       {dropDownButton}
-      <div className={"absolute flex flex-col top-[52px] right-[0px] rounded-es-md overflow-hidden transition-[height] duration-200 bg-gray-900 w-auto " + (open ? "h-[128px]" : "h-0")}>
+      <div className={"absolute flex flex-col top-[56px] right-[0px] rounded-es-md overflow-hidden transition-[height] duration-200 bg-gray-800 w-auto " + (open ? "h-[128px]" : "h-0")}>
         {childArray.map((child) =>
           (<button onFocus={(e) => {
             // This is a little hacky, but I want the dropdown to stay open, but then close after you leave the page
