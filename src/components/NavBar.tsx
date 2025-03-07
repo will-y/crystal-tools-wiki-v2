@@ -1,19 +1,34 @@
 import {NavLink} from "react-router";
 import DropDown from "./DropDown.tsx";
 import DropDownElement from "./DropDownElement.tsx";
+import {MagnifyingGlassIcon} from "@heroicons/react/24/outline";
 
 function NavBar() {
   return (
     <nav className="bg-gray-800">
-      <div className="flex justify-between">
-        <div className="flex justify-between items-center max-w-7xl my-2">
-          <NavLink to="/" className = {({ isActive }) => "ms-1 rounded-md px-3 py-2 text-md font-medium text-cyan-400 hover:bg-gray-700 hover:text-cyan-200 " + (isActive ? "bg-gray-900 text-cyan-300" : "")} >Crystal Tools</NavLink>
-          <NavLink to="/wiki" className={({ isActive }) => "rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Wiki</NavLink>
-          <NavLink to="/datapack-docs" className={({ isActive }) => "rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Datapack Docs</NavLink>
-          <NavLink to="/skill-tree" className={({ isActive }) => "rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Create a Skill Tree</NavLink>
+      {/*Mobile UI*/}
+      <div className="flex justify-between items-center sm:hidden">
+        <DropDown height="h-[144px]" icon className="rounded-md px-3 py-2 mx-1 my-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" >
+          <NavLink to="/" className = {({ isActive }) => "flex rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-cyan-300" : "")} >Home</NavLink>
+          <NavLink to="/wiki" className={({ isActive }) => "flex rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Wiki</NavLink>
+          <NavLink to="/datapack-docs" className={({ isActive }) => "flex rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Datapack Docs</NavLink>
+          <NavLink to="/skill-tree" className={({ isActive }) => "flex rounded-md px-3 py-2 mx-1 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white " + (isActive ? "bg-gray-900 text-white" : "")}>Create a Skill Tree</NavLink>
+        </DropDown>
+        <span className="text-md font-medium text-cyan-400">Crystal Tools Wiki</span>
+        <button className="rounded-md px-3 py-2 mx-1 my-2 text-gray-300 hover:bg-gray-700 hover:text-white cursor-pointer">
+          <MagnifyingGlassIcon width={24} height={24} />
+        </button>
+      </div>
+      {/*Desktop UI*/}
+      <div className="justify-between hidden sm:flex">
+        <div className="flex justify-between items-center max-w-7xl my-2 ">
+          <NavLink to="/" className = {({ isActive }) => "ms-1 rounded-md px-3 py-2 text-md font-medium text-cyan-400 hover:bg-gray-700 hover:text-cyan-100 " + (isActive ? "bg-gray-900 text-cyan-200" : "")} >Crystal Tools</NavLink>
+          <NavLink to="/wiki" className={({ isActive }) => "mx-2 px-3 py-2 rounded-md hover:bg-gray-700 hover:text-white hover:cursor-pointer " + (isActive ? "bg-gray-900 text-white" : "")}>Wiki</NavLink>
+          <NavLink to="/datapack-docs" className={({ isActive }) => "mx-2 px-3 py-2 rounded-md hover:bg-gray-700 hover:text-white hover:cursor-pointer " + (isActive ? "bg-gray-900 text-white" : "")}>Datapack Docs</NavLink>
+          <NavLink to="/skill-tree" className={({ isActive }) => "mx-2 px-3 py-2 rounded-md hover:bg-gray-700 hover:text-white hover:cursor-pointer " + (isActive ? "bg-gray-900 text-white" : "")}>Create a Skill Tree</NavLink>
         </div>
         <div className="flex justify-between items-center max-w-7xl my-2 pe-2">
-          <DropDown className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white" title="Download">
+          <DropDown height="h-[128px]" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" title="Download">
             <DropDownElement title="CurseForge" url="https://www.curseforge.com/minecraft/mc-mods/upgradable-crystal-tools">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="24px" height="24px"><path fill="#f16436" d="M14.01,16l0.63,2H0v1c0,4.6,7.97,8.37,18.27,8.73l2,6.27h1.69l-2.07,7.62h17.65L36.02,34h1.71l0.22-0.69 c1.78-5.52,6.42-10.18,11.28-11.34L50,21.79V16H14.01z M33.29,30.1c-0.68,0.81-1.57,1.08-2.18,1.08c-0.54,0-0.81,0.14-0.95,0.82 c0,0-0.81-1.36-1.9-1.22C27.17,30.91,25,30.37,25,27.92c0-1.35,1.63-2.17,1.63-2.17s-0.68,2.31,1.09,2.31 c1.68,0,1.52-1.86,0.95-2.72c-0.55-0.81-0.68-0.95-0.41-2.04c0.27,0.82,1.36,1.09,1.22,0.55c-0.13-0.55-0.81-1.5-0.27-2.58 c0.41-0.83,2.05-1.6,2.39-1.74c-0.27,0.18-1.42,0.97-1.3,2.28c0.13,1.49,1.49,2.72,1.49,2.72s-1.48,1.09-0.68,1.63 c0.82,0.54,1.23-0.27,1.23-0.27s0.54,0.95-0.68,1.35c-1.23,0.41-0.46,1.77,0.27,1.77c0.54,0,2.04-0.13,1.77-2.44 C34.24,27.38,34.58,28.55,33.29,30.1z"/></svg>
             </DropDownElement>
