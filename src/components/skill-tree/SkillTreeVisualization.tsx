@@ -47,6 +47,21 @@ function SkillTreeVisualization(props: SkillTreeVisualizationProps) {
     return [x, y]
   }
 
+  function getLink(node1: SkillTreeGraphNode<SkillNodeV2>, node2: SkillTreeGraphNode<SkillNodeV2>): [number, number, number, number] {
+    const [node1X, node1Y] = getNodePosition(node1)
+    const [node2X, node2Y] = getNodePosition(node2)
+
+    if (node1.tierIndex !== node2.tierIndex) {
+      return [node1X + width / 2, node1Y, node2X + width / 2, node2Y + height]
+    } else {
+      if (node1.index > node2.index) {
+        return [node1X, node1Y + height / 2, node2X + width, node2Y + height / 2]
+      } else {
+        return [node1X + width, node1Y + height / 2, node2X, node2Y + height / 2]
+      }
+    }
+  }
+
   return (
     <svg viewBox={`0 0 ${svgHeight} ${svgWidth}`} width={750} height={750} onWheelCapture={onScroll}
          onMouseEnter={() => setMouseIn(true)} onMouseLeave={() => {setMouseIn(false); setGrabbing(false)}} onMouseMove={onMouseMove}
@@ -58,14 +73,29 @@ function SkillTreeVisualization(props: SkillTreeVisualizationProps) {
           <rect key={entry[0] + "-rect"} x={x} y={y} width={width} height={height} fill="#FFFFFF" />
           {/*TODO: Fix the positioning*/}
           <text key={entry[0] + "-text"} x={x} y={y + height / 2} className="select-none">{entry[1].skillNode.name}</text>
+          {/*TODO: Going to need to do something about this. Settings to only show specific types of links? Also need some better Z values*/}
+          {entry[1].requirements.get("AND")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="3" key={entry[0] + "-" + otherNode} />
+            )
+          })}
+          {entry[1].requirements.get("OR")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="blue" strokeWidth="2" key={entry[0] + "-" + otherNode} />
+            )
+          })}
+          {entry[1].requirements.get("NOT")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="red" strokeWidth="3" key={entry[0] + "-" + otherNode} />
+            )
+          })}
         </Fragment>)
       })}
     </svg>
   )
-}
-
-function getLink(node1: SkillNodeV2, node2: SkillNodeV2) {
-
 }
 
 export default SkillTreeVisualization

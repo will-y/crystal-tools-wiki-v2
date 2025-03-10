@@ -48,8 +48,25 @@ export function toGraphNodes(skillTree: SkillTreeV2): Map<number, SkillTreeGraph
         skillNode: node,
         tierIndex: tierIndex,
         tierSize: tier.length,
-        index: nodeIndex
+        index: nodeIndex,
+        requirements: getRequirements(node)
       }
     ]
   })))
+}
+
+function getRequirements(node: SkillNodeV2): Map<"OR" | "AND" | "NOT", number[]> {
+  const result = new Map()
+
+  for (const requirement of node.requirements) {
+    if ((requirement as NodeRequirementV2).node) {
+      result.set("AND", (requirement as NodeRequirementV2).node)
+    } else if ((requirement as OrNodeRequirementV2).or_node) {
+      result.set("OR", (requirement as OrNodeRequirementV2).or_node)
+    } else if ((requirement as NotNodeRequirementV2).not_node) {
+      result.set("NOT", (requirement as NotNodeRequirementV2).not_node)
+    }
+  }
+
+  return result
 }

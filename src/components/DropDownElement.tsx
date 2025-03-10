@@ -8,7 +8,7 @@ interface DropDownElementProps {
 
 function DropDownElement(props: DropDownElementProps) {
   return (
-    <a href={props.url} target="_blank" className="flex justify-start mx-2 px-3 py-2 rounded-md hover:bg-gray-800 hover:text-white hover:cursor-pointer">
+    <a href={props.url} target="_blank" className="flex justify-start mx-2 px-3 py-2 rounded-md hover:bg-gray-700 hover:text-white hover:cursor-pointer">
       {props.children}
       <div className="ps-1">{props.title}</div>
       <ArrowTopRightOnSquareIcon className="ms-1 mt-1" width={20} height={20} />
