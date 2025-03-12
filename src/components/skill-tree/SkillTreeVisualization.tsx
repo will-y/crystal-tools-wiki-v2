@@ -4,12 +4,16 @@ import {clamp} from "../../util/Math.ts";
 import SkillTreeGraphNode from "../../model/SkillTreeGraphNode.ts";
 
 interface SkillTreeVisualizationProps {
-  skillTree: SkillTreeV2
+  skillTree: SkillTreeV2,
+  showOrDependencies: boolean,
+  showNotDependencies: boolean,
+  showAndDependencies: boolean,
+  xSpacing: number,
+  ySpacing: number
 }
 
 const width = 150
 const height = 40
-const spacing = 40
 
 function SkillTreeVisualization(props: SkillTreeVisualizationProps) {
   const [nodes, setNodes] = useState(new Map<number, SkillTreeGraphNode<SkillNodeV2>>)
@@ -39,10 +43,10 @@ function SkillTreeVisualization(props: SkillTreeVisualizationProps) {
   }
 
   function getNodePosition(node: SkillTreeGraphNode<SkillNodeV2>): [number, number] {
-    const xI = (svgWidth - (node.tierSize * (width + spacing) - spacing)) / 2
-    const yI = (svgHeight - (props.skillTree.tiers.length * (height + spacing) - spacing)) / 2
-    const x = xOffset + xI + node.index * (width + spacing)
-    const y = yOffset + yI + node.tierIndex * (height + spacing)
+    const xI = (svgWidth - (node.tierSize * (width + props.xSpacing) - props.xSpacing)) / 2
+    const yI = (svgHeight - (props.skillTree.tiers.length * (height + props.ySpacing) - props.ySpacing)) / 2
+    const x = xOffset + xI + node.index * (width + props.xSpacing)
+    const y = yOffset + yI + node.tierIndex * (height + props.ySpacing)
 
     return [x, y]
   }
@@ -70,28 +74,28 @@ function SkillTreeVisualization(props: SkillTreeVisualizationProps) {
       {Array.from(nodes.entries()).map((entry) => {
         const [x, y] = getNodePosition(entry[1]);
         return (<Fragment key={entry[0] + "-div"}>
+          {props.showOrDependencies ? entry[1].requirements.get("OR")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="blue" strokeWidth="2" key={entry[0] + "-" + otherNode} />
+            )
+          }): <></>}
+          {props.showAndDependencies ? entry[1].requirements.get("AND")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="3" key={entry[0] + "-" + otherNode} />
+            )
+          }): <></>}
+          {props.showNotDependencies ? entry[1].requirements.get("NOT")?.map(otherNode => {
+            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
+            return (
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="red" strokeWidth="3" key={entry[0] + "-" + otherNode} />
+            )
+          }): <></>}
           <rect key={entry[0] + "-rect"} x={x} y={y} width={width} height={height} fill="#FFFFFF" />
           {/*TODO: Fix the positioning*/}
-          <text key={entry[0] + "-text"} x={x} y={y + height / 2} className="select-none">{entry[1].skillNode.name}</text>
+          <text key={entry[0] + "-text"} x={x} y={y + height / 2} z={4} className="select-none">{entry[1].skillNode.name}</text>
           {/*TODO: Going to need to do something about this. Settings to only show specific types of links? Also need some better Z values*/}
-          {entry[1].requirements.get("AND")?.map(otherNode => {
-            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
-            return (
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="white" strokeWidth="3" key={entry[0] + "-" + otherNode} />
-            )
-          })}
-          {entry[1].requirements.get("OR")?.map(otherNode => {
-            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
-            return (
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="blue" strokeWidth="2" key={entry[0] + "-" + otherNode} />
-            )
-          })}
-          {entry[1].requirements.get("NOT")?.map(otherNode => {
-            const [x1, y1, x2, y2] = getLink(entry[1], nodes.get(otherNode)!)
-            return (
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="red" strokeWidth="3" key={entry[0] + "-" + otherNode} />
-            )
-          })}
         </Fragment>)
       })}
     </svg>
